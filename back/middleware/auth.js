@@ -7,11 +7,10 @@ module.exports = (req, res, next) => {
         const userId = decodedToken.userId;
         if(req.body.userId && req.body.userId !== userId) { // On indique si l'id est le même => false = Id non valide
             throw 'User ID non Valide'
-        }else{
+        }
+        else{
             next();
         }
     }
-    catch(err) {
-        console.log('Une erreur est servenu lors de la tentative de reconnaissance ' + err);
-    }
+    catch(err) { console.log('Une erreur est servenu lors de la tentative de reconnaissance ' + err)}
 }
