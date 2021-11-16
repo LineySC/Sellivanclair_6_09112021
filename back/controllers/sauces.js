@@ -1,4 +1,4 @@
-const Sauce = require('../models/sauces');
+const Sauce = require('../models/Sauce');
 const mongoose = require('mongoose');
 const fs = require('fs');
 
@@ -17,7 +17,7 @@ exports.createSauces = (req, res, next) => {
         .catch(err => res.status(400).json({message: 'Une erreur est servenu lors de la création de la sauces ' + err }));
 };
 //GetOne => Récupération d'une sauces
-exports.getOneSauces = (req, res, next) => {
+exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
     .then(sauces => res.status(200).json(sauces))
     .catch(err => res.status(400).json({message: err}));
@@ -38,7 +38,7 @@ exports.modifySauces = (req, res, next) => {
         imageUrl:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     }   : {...req.body};
     Sauce.updateOne({_id: req.params.id}, {...sauceObject, _id:req.params.id})
-        .then(() => res.status(200).json({message: "La sauces à bien été modifiée !"}))
+        .then(() => res.status(200).json({message: "La sauce à bien été modifiée !"}))
         .catch(err => res.status(400).json(err))
 }
 
@@ -64,13 +64,13 @@ exports.likes = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
 
-        if(reqLike === 1){
+        if(reqLike === 1 && !sauce.usersLiked.includes(reqUserId)){
             Sauce.updateOne({ $inc: {likes: 1}, $push: {usersLiked: req.body.userId}, _id: req.params.id })
                 .then(() => res.status(204).json({ message: 'Le like à été enregistré !' }))
                 .catch(err => res.status(400).json(console.log(err)))
         }
 
-        else if(reqLike === -1){
+        else if(reqLike === -1 && !sauce.usersLiked.includes(reqUserId)){
             sauce.updateOne({ $inc: {dislikes: 1}, $push: {usersDisliked: req.body.userId}, _id: req.params.id })
                 .then(() => res.status(204).json({ message : 'Le diskile a été pris en compte' }))
                 .catch(err => res.status(400).json(console.log(err)))
@@ -88,8 +88,8 @@ exports.likes = (req, res, next) => {
                 .catch(err => res.status(400).json(console.log(err)))
         }
         else{
-            console.error("Une erreur est survenu dans le Like/Dislike +- 1")
+            res.status(400)
         }
     })
-    .catch(err => console.error(err))
+    .catch(err => res.status(400).json(err))
 };

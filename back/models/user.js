@@ -12,4 +12,4 @@ const userSchema = mongoose.Schema ({
 userSchema.plugin(uniqueValidator);
 
 //Exportation du modules
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('User', userSchema);

@@ -10,7 +10,7 @@ const auth = require('../middleware/auth');
 
 router.post('/', auth, multer, saucesControllers.createSauces);
 router.get('/', auth, saucesControllers.getAllSauces);
-router.get('/:id', auth, saucesControllers.getOneSauces);
+router.get('/:id', auth, saucesControllers.getOneSauce);
 router.put('/:id', auth, saucesControllers.modifySauces);
 router.delete('/:id', auth, saucesControllers.deleteSauces);
 router.post('/:id/like', auth, saucesControllers.likes);

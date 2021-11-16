@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const User = require('../models/user');
+const User = require('../models/User');
 
 //Fonction d'inscription 
 exports.signup = (req, res, next) => {
@@ -13,9 +13,9 @@ exports.signup = (req, res, next) => {
         });
         user.save()
         .then(() => res.status(201).json({message: 'Utilisateur crée !'}))
-        .catch(err => console.log(err));
+        .catch((err) => res.status(400).json(err));
     })
-    .catch(() => console.log('Erreur dans le signup Controller'));
+    .catch((err) => res.status(400).json);
 };
 
 
@@ -28,7 +28,7 @@ exports.login = (req, res, next) => {
         bcrypt.compare(req.body.password, User.password)
         .then(valid => {
             if(!valid) {
-                return res.status(400).json({message: "Le mots de pass ne correspond pas avec l'identifiant"});
+                return res.status(400).json({message: "Le mot de passe ne correspond pas avec l'identifiant"});
             }
             res.status(200).json({
                 userId: User._id,
@@ -39,7 +39,7 @@ exports.login = (req, res, next) => {
                 )
             })
         })
-        .catch(err => console.log(err));
+        .catch((err) => res.status(400).json(err));
     })
-    .catch(err => log("Erreur dans le controllerts Login" + err));
+    .catch((err) => res.status(400).json(err));
 }
