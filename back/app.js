@@ -1,6 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
+const helmet = require('helmet');
+const expressRateLimit = require('express-rate-limit');
+
+//Définition des limit de requetes
+const limiter = expressRateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // Limite chaque IP à 100 requêtes en fonction de windowMS
+});
 
 //Routes
 const userRoutes = require('./routes/user');
@@ -28,6 +36,10 @@ app.use((req, res, next) => {
 })
 
 app.use(express.json());
+
+app.use(helmet());
+
+app.use(limiter);
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

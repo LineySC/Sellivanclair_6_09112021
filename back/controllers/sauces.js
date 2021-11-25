@@ -5,7 +5,7 @@ const fs = require('fs');
 
 //CREATE => POST => Création
 
-exports.createSauces = (req, res, next) => {
+exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
     const sauce = new Sauce ({
@@ -14,24 +14,25 @@ exports.createSauces = (req, res, next) => {
     });
     sauce.save()
         .then(() => res.status(201).json({message: 'La sauces à été crée'}))
-        .catch(err => res.status(400).json({message: 'Une erreur est servenu lors de la création de la sauces ' + err }));
+        .catch(err => res.status(400).json(err));
 };
+
 //GetOne => Récupération d'une sauces
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id})
     .then(sauces => res.status(200).json(sauces))
-    .catch(err => res.status(400).json({message: err}));
+    .catch(err => res.status(400).json(err));
 };
 
 //GetAll => Récupération de toutes les sauces
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
     .then(sauces => res.status(200).json(sauces))
-    .catch(err => res.status(400).json({message: err}))
+    .catch(err => res.status(400).json(err))
 }
 
 //UpdateOne => PUT => Modification
-exports.modifySauces = (req, res, next) => {
+exports.modifySauce = (req, res, next) => {
     const sauceObject = req.file ?
     {
         ...JSON.parse(req.body.sauce),
@@ -43,7 +44,7 @@ exports.modifySauces = (req, res, next) => {
 }
 
 //DELETE => Supprimer 
-exports.deleteSauces = (req, res, next) => {
+exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
     .then(sauces => {
         const filename = sauces.imageUrl.split('/images/')[1];
